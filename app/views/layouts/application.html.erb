@@ -23,9 +23,7 @@
   </head>
 
   <body>
-  <%flash.each do |key,msge|%>
-<h4><%=msge%></h4>
-<%end%>
+ <%= render 'layouts/messages'%>
     <%= yield %>
   </body>
 </html>
