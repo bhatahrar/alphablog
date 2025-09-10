@@ -13,6 +13,7 @@ class ArticlesController < ApplicationController
     def create
         # byebug  
         @article=Article.new(article_params)
+        @user=User.first
         # render plain:@article.inspect
             if @article.save
                 flash[:notice]="Article was created successfully.."
