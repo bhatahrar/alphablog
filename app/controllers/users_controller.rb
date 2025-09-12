@@ -12,6 +12,25 @@ class UsersController < ApplicationController
                         render :new,status: :unprocessable_entity
                 end
         end
+        def edit
+                # byebug
+                @user=User.find(params[:id])
+        end
+
+        def update
+                # byebug
+                @user=User.find(params[:id])
+                if@user.update(user_params)
+                        flash[:notice]="User Profile has been updated"
+                        redirect_to articles_path
+                        @user.save
+                else
+                        render :edit ,status: :unprocessable_entity 
+                end
+        end
+
+
+
 
         private
         def user_params
