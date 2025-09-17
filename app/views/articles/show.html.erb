@@ -3,7 +3,9 @@
 <p><strong>Title:</strong><%=@article.title%></p>
 <p><strong>Description:</strong><%=@article.description%></p>
 <p>
-<%=link_to'Edit this article',edit_article_path(@article)%> |
 <%=link_to'Back to homepage',articles_path%> |
-<%=link_to'Delete this article',article_path(@article), data:{turbo_method: :delete, turbo_confirm: "Are you sure"}%>
+<%if logged_in? && (@article.user==current_user || current_user.admin?)%>
+<%=link_to'Edit this article',edit_article_path(@article)%> |
+<%=link_to'Delete this article',article_path(@article), data:{turbo_method: :delete, turbo_confirm: "Are you sure?"}%>
 </p>
+<%end%>

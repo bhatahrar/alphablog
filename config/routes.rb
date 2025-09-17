@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   root "pages#home"
   # post 'users',to:'users#create'
 resources :users,except:[:new]
+get 'login',to:'sessions#new'
+post 'login',to:'sessions#create'
+delete 'logout',to:'sessions#destroy'
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

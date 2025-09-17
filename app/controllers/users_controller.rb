@@ -1,16 +1,23 @@
 class UsersController < ApplicationController
+        before_action :set_user,only:[:show,:edit,:update,:destroy]
+        before_action :require_user,only:[:edit,:update]
+        before_action :require_same_user,only:[:edit,:update,:destroy]
+
         def show
                 # byebug
-                @user=User.find(params[:id])
-                @articles=@user.articles
+                @articles=@user.articles.paginate(page: params[:page], per_page: 5)
         end
         def new
         @user=User.new
+        end
+        def index
+                @users=User.paginate(page: params[:page], per_page: 5)
         end
         def create 
                 # byebug
                 @user=User.new(user_params)
                 if @user.save
+                        session[:user_id]=@user.id
                         flash[:notice]="Welcome to the blog #{@user.username}, you have sucessfully signed up"
                         redirect_to articles_path
                 else
@@ -19,26 +26,34 @@ class UsersController < ApplicationController
         end
         def edit
                 # byebug
-                @user=User.find(params[:id])
         end
 
         def update
                 # byebug
-                @user=User.find(params[:id])
                 if@user.update(user_params)
                         flash[:notice]="User Profile has been updated"
-                        redirect_to articles_path
-                        @user.save
+                        redirect_to user_path(@user.id) #@user
                 else
                         render :edit ,status: :unprocessable_entity 
                 end
         end
-
-
-
-
-        private
+        def destroy
+                @user.destroy
+                session[:user_id]=nil
+                flash[:notice]="Account and all associated articles will be successfully deleted"
+                redirect_to articles_path
+        end
         def user_params
                 params.require(:user).permit(:username,:email,:password)
         end
+        private
+        def set_user
+                @user=User.find(params[:id])
+        end
+        def require_same_user
+                if current_user != @user
+                flash[:alert]="You can only edit your own account"
+                redirect_to @user 
+        end
+end
 end
